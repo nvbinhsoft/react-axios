@@ -1,23 +1,42 @@
-import { createPost, Post } from "../services/postService.tsx";
-import React, { useState } from "react";
+import { createPost, updatePost, Post } from "../services/postService.tsx";
+import React, { useState, useEffect } from "react";
 
-export default function PostForm({ post, setPost }: { post: Post[]; setPost: React.Dispatch<React.SetStateAction<Post[]>> }) {
+export default function PostForm({ post, setPost, editingPost, setEditingPost }: { post: Post[]; setPost: React.Dispatch<React.SetStateAction<Post[]>>; editingPost: Post | null; setEditingPost: React.Dispatch<React.SetStateAction<Post | null>> }) {
     const [title, setTitle] = useState<string>("");
     const [body, setBody] = useState<string>("");
     const [userId, setUserId] = useState<number>(1);
     const [loading, setLoading] = useState<boolean>(false);
 
+    useEffect(() => {
+        if (editingPost) {
+            setTitle(editingPost.title);
+            setBody(editingPost.body);
+            setUserId(editingPost.userId);
+        }
+    }, [editingPost]);
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setLoading(true);
         try {
-            const response = await createPost({
-                userId,
-                id: post.length + 1,
-                title,
-                body
-            });
-            setPost([...post, response.data]);
+            if (editingPost) {
+                const response = await updatePost({
+                    userId,
+                    id: editingPost.id,
+                    title,
+                    body
+                });
+                setPost(post.map(p => p.id === editingPost.id ? response.data : p));
+                setEditingPost(null);
+            } else {
+                const response = await createPost({
+                    userId,
+                    id: post.length + 1,
+                    title,
+                    body
+                });
+                setPost([...post, response.data]);
+            }
             setTitle("");
             setBody("");
             setUserId(1);
@@ -51,7 +70,7 @@ export default function PostForm({ post, setPost }: { post: Post[]; setPost: Rea
                 onChange={(event) => setBody(event.target.value)}
                 disabled={loading}
             />
-            <button type="submit" disabled={loading}>Create</button>
+            <button type="submit" disabled={loading}>{editingPost ? "Update" : "Create"}</button>
         </form>
     );
 }

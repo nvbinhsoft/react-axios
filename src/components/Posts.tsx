@@ -5,6 +5,7 @@ import PostForm from "./PostForm.tsx";
 export default function Posts() {
     const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState<number | null>(null);
+    const [editingPost, setEditingPost] = useState<Post | null>(null);
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -30,10 +31,14 @@ export default function Posts() {
         }
     };
 
+    const handleEdit = (post: Post) => {
+        setEditingPost(post);
+    };
+
     return (
         <div>
             <h1>Posts</h1>
-            <PostForm post={posts} setPost={setPosts} />
+            <PostForm post={posts} setPost={setPosts} editingPost={editingPost} setEditingPost={setEditingPost} />
             <table style={{ border: "1px solid black", borderCollapse: "collapse" }}>
                 <thead>
                 <tr>
@@ -52,6 +57,7 @@ export default function Posts() {
                         <td style={{ border: "1px solid black" }}>{post.title}</td>
                         <td style={{ border: "1px solid black" }}>{post.body}</td>
                         <td style={{ border: "1px solid black" }}>
+                            <button onClick={() => handleEdit(post)}>Edit</button>
                             <button onClick={() => handleDelete(post.id)} disabled={loading === post.id}>
                                 {loading === post.id ? 'Deleting...' : 'Delete'}
                             </button>

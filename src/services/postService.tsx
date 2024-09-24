@@ -17,4 +17,6 @@ const deletePost = (id: number) : Promise<void> => api.delete(`/posts/${id}`);
 
 const createPost = (post: Post) : Promise<{data: Post}> => api.post("/posts", post);
 
-export { deletePost, getPosts, createPost };
+const updatePost = (post: Post) : Promise<{data: Post}> => api.put(`/posts/${post.id}`, post);
+
+export { deletePost, getPosts, createPost, updatePost };
