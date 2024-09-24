@@ -1,5 +1,6 @@
 import { createPost, updatePost, Post } from "../services/postService.tsx";
 import React, { useState, useEffect } from "react";
+import LoadingPopup from "./LoadingPopup.tsx";
 
 export default function PostForm({ post, setPost, editingPost, setEditingPost }: { post: Post[]; setPost: React.Dispatch<React.SetStateAction<Post[]>>; editingPost: Post | null; setEditingPost: React.Dispatch<React.SetStateAction<Post | null>> }) {
     const [title, setTitle] = useState<string>("");
@@ -48,29 +49,32 @@ export default function PostForm({ post, setPost, editingPost, setEditingPost }:
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="number"
-                placeholder="User ID"
-                value={userId}
-                onChange={(event) => setUserId(Number(event.target.value))}
-                disabled={loading}
-            />
-            <input
-                type="text"
-                placeholder="Title"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                disabled={loading}
-            />
-            <input
-                type="text"
-                placeholder="Body"
-                value={body}
-                onChange={(event) => setBody(event.target.value)}
-                disabled={loading}
-            />
-            <button type="submit" disabled={loading}>{editingPost ? "Update" : "Create"}</button>
-        </form>
+        <div>
+            {loading && <LoadingPopup />}
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="number"
+                    placeholder="User ID"
+                    value={userId}
+                    onChange={(event) => setUserId(Number(event.target.value))}
+                    disabled={loading}
+                />
+                <input
+                    type="text"
+                    placeholder="Title"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
+                    disabled={loading}
+                />
+                <input
+                    type="text"
+                    placeholder="Body"
+                    value={body}
+                    onChange={(event) => setBody(event.target.value)}
+                    disabled={loading}
+                />
+                <button type="submit" disabled={loading}>{editingPost ? "Update" : "Create"}</button>
+            </form>
+        </div>
     );
 }
