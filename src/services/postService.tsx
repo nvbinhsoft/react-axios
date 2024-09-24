@@ -15,4 +15,6 @@ export interface Post {
 
 const deletePost = (id: number) : Promise<void> => api.delete(`/posts/${id}`);
 
-export { deletePost, getPosts };
+const createPost = (post: Post) : Promise<{data: Post}> => api.post("/posts", post);
+
+export { deletePost, getPosts, createPost };

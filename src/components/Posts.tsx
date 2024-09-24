@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getPosts, Post, deletePost } from '../services/postService';
+import PostForm from "./PostForm.tsx";
 
 export default function Posts() {
     const [posts, setPosts] = useState<Post[]>([]);
@@ -32,6 +33,7 @@ export default function Posts() {
     return (
         <div>
             <h1>Posts</h1>
+            <PostForm post={posts} setPost={setPosts} />
             <table style={{ border: "1px solid black", borderCollapse: "collapse" }}>
                 <thead>
                 <tr>
